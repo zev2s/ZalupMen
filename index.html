@@ -1,0 +1,5021 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ZalupMen</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #08090d;
+    --bg-secondary: #0d0f15;
+    --panel: #11131a;
+    --panel-light: #171a23;
+    --panel-hover: #1b1f29;
+
+    --border: rgba(255,255,255,.07);
+    --border-light: rgba(255,255,255,.11);
+
+    --text: #f5f5f7;
+    --text-secondary: #9699a5;
+    --text-muted: #666a76;
+
+    --accent: #7c5cff;
+    --accent-hover: #8c70ff;
+    --accent-soft: rgba(124,92,255,.15);
+
+    --danger: #ff4d67;
+    --success: #45d483;
+
+    --radius: 14px;
+    --radius-small: 10px;
+
+    --sidebar-width: 300px;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 20% 0%,
+            rgba(124,92,255,.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(70,120,255,.05),
+            transparent 30%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+button {
+    border: 0;
+    outline: none;
+    cursor: pointer;
+}
+
+input,
+textarea {
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.10);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,.16);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================
+   AUTH
+========================= */
+
+#authScreen {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(124,92,255,.13),
+            transparent 35%
+        ),
+        var(--bg);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 36px;
+
+    border: 1px solid var(--border);
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.035),
+            rgba(255,255,255,.015)
+        ),
+        var(--panel);
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.45);
+
+    animation: authAppear .35s ease;
+}
+
+@keyframes authAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.auth-logo {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 22px;
+
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #5d3fff
+        );
+
+    box-shadow:
+        0 12px 35px rgba(124,92,255,.3);
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.auth-card h1 {
+    margin-bottom: 8px;
+
+    font-size: 27px;
+    font-weight: 750;
+    letter-spacing: -.7px;
+}
+
+.auth-subtitle {
+    margin-bottom: 28px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.field {
+    position: relative;
+}
+
+.field input {
+    width: 100%;
+    height: 50px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.035);
+    color: var(--text);
+
+    transition:
+        border-color .2s,
+        background .2s,
+        box-shadow .2s;
+}
+
+.field input::placeholder {
+    color: var(--text-muted);
+}
+
+.field input:focus {
+    border-color: rgba(124,92,255,.65);
+
+    background: rgba(124,92,255,.045);
+
+    box-shadow:
+        0 0 0 3px rgba(124,92,255,.09);
+}
+
+.primary-btn {
+    width: 100%;
+    height: 50px;
+
+    margin-top: 5px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #6548ed
+        );
+
+    color: white;
+
+    font-weight: 650;
+
+    box-shadow:
+        0 10px 25px rgba(124,92,255,.20);
+
+    transition:
+        transform .15s,
+        filter .15s;
+}
+
+.primary-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.secondary-btn {
+    width: 100%;
+    height: 48px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.035);
+
+    color: var(--text);
+
+    font-weight: 600;
+
+    transition:
+        background .15s,
+        border-color .15s;
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,.065);
+    border-color: var(--border-light);
+}
+
+.auth-switch {
+    margin-top: 20px;
+
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+.auth-switch button {
+    margin-left: 5px;
+
+    background: transparent;
+
+    color: #a893ff;
+
+    font-weight: 650;
+}
+
+.auth-switch button:hover {
+    color: white;
+}
+
+.auth-error {
+    min-height: 18px;
+
+    margin-top: 4px;
+
+    color: var(--danger);
+
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* =========================
+   APP
+========================= */
+
+#app {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    background: var(--bg);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    border-right: 1px solid var(--border);
+
+    background: rgba(13,15,21,.96);
+
+    backdrop-filter: blur(20px);
+}
+
+.sidebar-header {
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 18px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.brand-icon {
+    width: 37px;
+    height: 37px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #6548ed
+        );
+
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.brand-name {
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: -.3px;
+}
+
+.icon-btn {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    transition:
+        background .15s,
+        color .15s;
+}
+
+.icon-btn:hover {
+    background: rgba(255,255,255,.06);
+    color: white;
+}
+
+/* SEARCH */
+
+.search-box {
+    padding: 14px 15px;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-wrapper input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 13px 0 38px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.035);
+
+    color: var(--text);
+
+    font-size: 13px;
+}
+
+.search-wrapper input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-icon {
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+
+    pointer-events: none;
+}
+
+.sidebar-section {
+    padding: 3px 10px 8px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.chat-list {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 0 8px;
+}
+
+/* CHAT ITEM */
+
+.chat-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 10px;
+    margin-bottom: 2px;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    text-align: left;
+
+    transition: background .15s;
+}
+
+.chat-item:hover {
+    background: rgba(255,255,255,.045);
+}
+
+.chat-item.active {
+    background: rgba(124,92,255,.14);
+}
+
+/* AVATAR */
+
+.avatar {
+    position: relative;
+
+    flex: 0 0 auto;
+
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #292d38,
+            #171922
+        );
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.online-dot {
+    position: absolute;
+
+    right: 0;
+    bottom: 1px;
+
+    width: 11px;
+    height: 11px;
+
+    border: 2px solid var(--panel);
+
+    border-radius: 50%;
+
+    background: var(--success);
+}
+
+/* CHAT INFO */
+
+.chat-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.chat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+}
+
+.chat-name {
+    overflow: hidden;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chat-time {
+    flex: 0 0 auto;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+}
+
+.chat-preview {
+    overflow: hidden;
+
+    margin-top: 4px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* SIDEBAR BOTTOM */
+
+.sidebar-bottom {
+    padding: 10px;
+
+    border-top: 1px solid var(--border);
+}
+
+.profile-mini {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    text-align: left;
+}
+
+.profile-mini:hover {
+    background: rgba(255,255,255,.05);
+}
+
+.profile-mini-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.profile-mini-name {
+    overflow: hidden;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.profile-mini-status {
+    margin-top: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+}
+
+/* =========================
+   CHAT AREA
+========================= */
+
+.chat-area {
+    min-width: 0;
+    flex: 1;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    background:
+        radial-gradient(
+            circle at 70% 0%,
+            rgba(124,92,255,.035),
+            transparent 35%
+        ),
+        var(--bg);
+}
+
+/* HEADER */
+
+.chat-header {
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 20px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: rgba(8,9,13,.75);
+
+    backdrop-filter: blur(20px);
+}
+
+.chat-header-user {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+.chat-header-user .avatar {
+    width: 39px;
+    height: 39px;
+}
+
+.chat-header-info h2 {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.chat-header-status {
+    margin-top: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+.chat-header-actions {
+    margin-left: auto;
+
+    display: flex;
+
+    gap: 4px;
+}
+
+/* =========================
+   MESSAGES
+========================= */
+
+.messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 25px 25px 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.empty-chat {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    color: var(--text-muted);
+
+    text-align: center;
+}
+
+.empty-chat-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    border-radius: 18px;
+
+    background: rgba(255,255,255,.035);
+
+    font-size: 22px;
+}
+
+.empty-chat-title {
+    margin-bottom: 5px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.empty-chat-text {
+    font-size: 12px;
+}
+
+/* MESSAGE */
+
+.message-row {
+    width: 100%;
+
+    display: flex;
+}
+
+.message-row.mine {
+    justify-content: flex-end;
+}
+
+.message-bubble {
+    position: relative;
+
+    max-width: min(620px,72%);
+
+    padding: 9px 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    background: var(--panel);
+
+    color: var(--text);
+
+    font-size: 13px;
+    line-height: 1.45;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.08);
+}
+
+.message-row.mine .message-bubble {
+    border-color: rgba(124,92,255,.18);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,.24),
+            rgba(89,63,180,.18)
+        );
+}
+
+.message-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 5px;
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+}
+
+.message-row.mine .message-meta {
+    color: rgba(255,255,255,.45);
+}
+
+/* =========================
+   COMPOSER
+========================= */
+
+.composer {
+    padding: 12px 18px 16px;
+}
+
+.composer-inner {
+    min-height: 54px;
+
+    display: flex;
+    align-items: flex-end;
+
+    gap: 8px;
+
+    padding: 7px 8px 7px 10px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    background: rgba(255,255,255,.035);
+
+    transition:
+        border-color .2s,
+        box-shadow .2s;
+}
+
+.composer-inner:focus-within {
+    border-color: rgba(124,92,255,.35);
+
+    box-shadow:
+        0 0 0 3px rgba(124,92,255,.06);
+}
+
+.composer-input {
+    min-width: 0;
+    flex: 1;
+
+    min-height: 38px;
+    max-height: 130px;
+
+    padding: 9px 5px;
+
+    border: 0;
+
+    resize: none;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.composer-input::placeholder {
+    color: var(--text-muted);
+}
+
+.send-btn {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #6548ed
+        );
+
+    color: white;
+
+    transition:
+        transform .15s,
+        filter .15s;
+}
+
+.send-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.send-btn:active {
+    transform: translateY(0);
+}
+
+.composer-btn {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    transition:
+        background .15s,
+        color .15s;
+}
+
+.composer-btn:hover {
+    background: rgba(255,255,255,.06);
+    color: white;
+}
+
+.composer-btn.recording {
+    background: rgba(255,77,103,.15);
+    color: #ff6c80;
+
+    animation: recordPulse 1s infinite;
+}
+
+@keyframes recordPulse {
+    50% {
+        box-shadow:
+            0 0 0 5px rgba(255,77,103,.08);
+    }
+}
+
+/* =========================
+   VOICE MESSAGE
+========================= */
+
+.voice-message {
+    width: 285px;
+    min-height: 64px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 9px 10px;
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    border-radius: 15px;
+
+    background: rgba(255,255,255,.035);
+
+    transition:
+        background .2s,
+        border-color .2s,
+        transform .2s;
+}
+
+.voice-message:hover {
+    background: rgba(255,255,255,.055);
+
+    border-color: rgba(255,255,255,.11);
+}
+
+.message-row.mine .voice-message {
+    background: rgba(124,92,255,.12);
+
+    border-color: rgba(124,92,255,.18);
+}
+
+.voice-play {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #6043e8
+        );
+
+    color: white;
+
+    font-size: 14px;
+
+    box-shadow:
+        0 7px 20px rgba(124,92,255,.25);
+
+    transition:
+        transform .18s,
+        filter .18s,
+        box-shadow .18s;
+}
+
+.voice-play:hover {
+    transform: scale(1.07);
+
+    filter: brightness(1.1);
+
+    box-shadow:
+        0 9px 25px rgba(124,92,255,.35);
+}
+
+.voice-play:active {
+    transform: scale(.96);
+}
+
+.voice-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.voice-waveform {
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 2px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.voice-waveform span {
+    width: 3px;
+    min-height: 5px;
+
+    flex: 1;
+    max-width: 4px;
+
+    border-radius: 5px;
+
+    background: rgba(255,255,255,.28);
+
+    opacity: .8;
+
+    transition:
+        background .1s,
+        opacity .1s;
+}
+
+.voice-waveform span.played {
+    background: var(--accent);
+    opacity: 1;
+}
+
+.voice-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 2px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+}
+
+.voice-current {
+    color: var(--text-secondary);
+}
+
+.voice-duration {
+    color: var(--text-muted);
+}
+
+.voice-message.playing {
+    border-color: rgba(124,92,255,.3);
+
+    background: rgba(124,92,255,.08);
+}
+
+.voice-message.playing .voice-play {
+    animation: voicePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes voicePulse {
+    0%,100% {
+        box-shadow:
+            0 7px 20px rgba(124,92,255,.25);
+    }
+
+    50% {
+        box-shadow:
+            0 7px 28px rgba(124,92,255,.55);
+    }
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0,0,0,.65);
+
+    backdrop-filter: blur(8px);
+}
+
+.modal {
+    width: 100%;
+    max-width: 480px;
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    padding: 24px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.015)
+        ),
+        var(--panel);
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.55);
+
+    animation: modalAppear .2s ease;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(.97) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 17px;
+    font-weight: 750;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    font-size: 17px;
+}
+
+.modal-close:hover {
+    background: rgba(255,255,255,.06);
+    color: white;
+}
+
+.modal-field {
+    margin-bottom: 12px;
+}
+
+.modal-field label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+.modal-field input,
+.modal-field textarea {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.035);
+
+    color: var(--text);
+
+    resize: vertical;
+}
+
+.modal-field textarea {
+    min-height: 90px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.modal-actions button {
+    flex: 1;
+}
+
+.danger-btn {
+    height: 44px;
+
+    border-radius: 10px;
+
+    background: rgba(255,77,103,.12);
+
+    border: 1px solid rgba(255,77,103,.22);
+
+    color: #ff8090;
+}
+
+.danger-btn:hover {
+    background: rgba(255,77,103,.18);
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toastContainer {
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 5000;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    gap: 8px;
+
+    pointer-events: none;
+}
+
+.toast {
+    max-width: 350px;
+
+    padding: 12px 15px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: rgba(20,22,29,.96);
+
+    color: var(--text);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35);
+
+    font-size: 12px;
+
+    animation:
+        toastIn .25s ease,
+        toastOut .25s ease 3.25s forwards;
+}
+
+.toast.error {
+    border-color: rgba(255,77,103,.3);
+}
+
+.toast.success {
+    border-color: rgba(69,212,131,.3);
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes toastOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:800px) {
+    :root {
+        --sidebar-width: 250px;
+    }
+
+    .message-bubble {
+        max-width: 82%;
+    }
+}
+
+@media(max-width:650px) {
+    .sidebar {
+        width: 75px;
+    }
+
+    .brand-name,
+    .search-box,
+    .sidebar-section,
+    .chat-info,
+    .profile-mini-info {
+        display: none;
+    }
+
+    .sidebar-header {
+        justify-content: center;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .chat-item {
+        justify-content: center;
+        padding: 9px 5px;
+    }
+
+    .profile-mini {
+        justify-content: center;
+    }
+
+    .sidebar-bottom {
+        display: flex;
+        justify-content: center;
+    }
+
+    .chat-header {
+        padding: 0 12px;
+    }
+
+    .messages {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .composer {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .voice-message {
+        width: 245px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     AUTH SCREEN
+========================= -->
+
+<div id="authScreen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            Z
+        </div>
+
+        <h1 id="authTitle">
+            Добро пожаловать
+        </h1>
+
+        <div class="auth-subtitle" id="authSubtitle">
+            Войди в ZalupMen, чтобы продолжить.
+        </div>
+
+        <!-- LOGIN -->
+
+        <form id="loginForm" class="auth-form">
+
+            <div class="field">
+                <input
+    id="loginEmail"
+    type="text"
+    placeholder="Email или имя пользователя"
+    autocomplete="username"
+    required
+>
+                >
+            </div>
+
+            <div class="field">
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Пароль"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Войти
+            </button>
+
+            <button
+                type="button"
+                class="secondary-btn"
+                id="forgotPasswordButton"
+            >
+                Забыли пароль?
+            </button>
+
+            <div
+                id="loginError"
+                class="auth-error"
+            ></div>
+
+        </form>
+
+        <!-- REGISTER -->
+
+        <form
+            id="registerForm"
+            class="auth-form hidden"
+        >
+
+            <div class="field">
+                <input
+                    id="registerUsername"
+                    type="text"
+                    placeholder="Имя пользователя"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <input
+                    id="registerEmail"
+                    type="email"
+                    placeholder="Email"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <input
+                    id="registerPassword"
+                    type="password"
+                    placeholder="Пароль"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Создать аккаунт
+            </button>
+
+            <div
+                id="registerError"
+                class="auth-error"
+            ></div>
+
+        </form>
+
+        <!-- FORGOT PASSWORD -->
+
+        <form
+            id="forgotForm"
+            class="auth-form hidden"
+        >
+
+            <div id="forgotStepEmail">
+
+                <div class="field">
+                    <input
+                        id="forgotEmail"
+                        type="email"
+                        placeholder="Email аккаунта"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Отправить код
+                </button>
+
+            </div>
+
+            <div
+                id="forgotStepCode"
+                class="hidden"
+            >
+
+                <div class="field">
+                    <input
+                        id="forgotCode"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="6"
+                        placeholder="6-значный код"
+                        autocomplete="one-time-code"
+                    >
+                </div>
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    id="verifyCodeButton"
+                >
+                    Проверить код
+                </button>
+
+            </div>
+
+            <div
+                id="forgotStepPassword"
+                class="hidden"
+            >
+
+                <div class="field">
+                    <input
+                        id="newPassword"
+                        type="password"
+                        placeholder="Новый пароль"
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <div class="field">
+                    <input
+                        id="newPasswordConfirm"
+                        type="password"
+                        placeholder="Повторите пароль"
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    id="resetPasswordButton"
+                >
+                    Изменить пароль
+                </button>
+
+            </div>
+
+            <div
+                id="forgotError"
+                class="auth-error"
+            ></div>
+
+        </form>
+
+        <div class="auth-switch">
+
+            <span id="authSwitchText">
+                Нет аккаунта?
+            </span>
+
+            <button
+                type="button"
+                id="authSwitchButton"
+            >
+                Регистрация
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MAIN APP
+========================= -->
+
+<div id="app" class="hidden">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    Z
+                </div>
+
+                <div class="brand-name">
+                    ZalupMen
+                </div>
+
+            </div>
+
+            <button
+                class="icon-btn"
+                id="newChatButton"
+                title="Новый чат"
+            >
+                ＋
+            </button>
+
+        </div>
+
+
+        <div class="search-box">
+
+            <div class="search-wrapper">
+
+                <span class="search-icon">
+                    🔎
+                </span>
+
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Поиск..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-section">
+            Чаты
+        </div>
+
+
+        <div
+            id="chatList"
+            class="chat-list"
+        ></div>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="profileButton"
+                class="profile-mini"
+            >
+
+                <div
+                    id="myAvatar"
+                    class="avatar"
+                >
+                    ?
+                </div>
+
+                <div class="profile-mini-info">
+
+                    <div
+                        id="myName"
+                        class="profile-mini-name"
+                    >
+                        Пользователь
+                    </div>
+
+                    <div class="profile-mini-status">
+                        Мой профиль
+                    </div>
+
+                </div>
+
+                <span>
+                    ⋯
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- CHAT -->
+
+    <main class="chat-area">
+
+        <header class="chat-header">
+
+            <div
+                id="chatHeaderUser"
+                class="chat-header-user hidden"
+            >
+
+                <div
+                    id="chatHeaderAvatar"
+                    class="avatar"
+                >
+                    ?
+                </div>
+
+                <div class="chat-header-info">
+
+                    <h2 id="chatHeaderName">
+                        Пользователь
+                    </h2>
+
+                    <div
+                        id="chatHeaderStatus"
+                        class="chat-header-status"
+                    >
+                        Не в сети
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="chatHeaderActions"
+                class="chat-header-actions hidden"
+            >
+
+                <button
+                    class="icon-btn"
+                    id="chatProfileButton"
+                    title="Профиль"
+                >
+                    👤
+                </button>
+
+                <button
+                    class="icon-btn"
+                    id="chatMoreButton"
+                    title="Дополнительно"
+                >
+                    ⋯
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <section
+            id="messages"
+            class="messages"
+        >
+
+            <div
+                id="emptyChat"
+                class="empty-chat"
+            >
+
+                <div class="empty-chat-icon">
+                    💬
+                </div>
+
+                <div class="empty-chat-title">
+                    Добро пожаловать в ZalupMen
+                </div>
+
+                <div class="empty-chat-text">
+                    Выбери чат слева или начни новый.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- COMPOSER -->
+
+        <div
+            id="composer"
+            class="composer hidden"
+        >
+
+            <div class="composer-inner">
+
+                <button
+                    class="composer-btn"
+                    id="attachButton"
+                    title="Прикрепить файл"
+                >
+                    📎
+                </button>
+
+                <input
+                    id="fileInput"
+                    type="file"
+                    class="hidden"
+                    multiple
+                >
+
+                <textarea
+                    id="messageInput"
+                    class="composer-input"
+                    rows="1"
+                    placeholder="Написать сообщение..."
+                ></textarea>
+
+                <button
+                    class="composer-btn"
+                    id="voiceButton"
+                    title="Записать голосовое"
+                >
+                    🎙
+                </button>
+
+                <button
+                    class="send-btn"
+                    id="sendButton"
+                    title="Отправить"
+                >
+                    ➤
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div
+    id="modalOverlay"
+    class="modal-overlay hidden"
+>
+
+    <div
+        id="modal"
+        class="modal"
+    >
+
+        <div class="modal-header">
+
+            <div
+                id="modalTitle"
+                class="modal-title"
+            >
+                Окно
+            </div>
+
+            <button
+                id="modalClose"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div id="modalContent"></div>
+
+    </div>
+
+</div>
+
+
+<!-- TOASTS -->
+
+<div id="toastContainer"></div>
+
+
+<!-- =========================
+     JAVASCRIPT — ЧАСТЬ 2
+========================= -->
+
+<script>
+const API = "http://localhost:3000";
+
+let token = localStorage.getItem("zalupmen_token") || "";
+
+let currentUser = null;
+let currentChatUser = null;
+
+let users = [];
+let messages = [];
+
+let resetToken = "";
+
+let isRegisterMode = false;
+let isForgotMode = false;
+
+let mediaRecorder = null;
+let mediaStream = null;
+let recordedChunks = [];
+
+let currentAudio = null;
+let selectedMessageId = null;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+const $ = selector => document.querySelector(selector);
+
+const authScreen = $("#authScreen");
+const authTitle = $("#authTitle");
+const authSubtitle = $("#authSubtitle");
+
+const loginForm = $("#loginForm");
+const registerForm = $("#registerForm");
+const forgotForm = $("#forgotForm");
+
+const authSwitchText = $("#authSwitchText");
+const authSwitchButton = $("#authSwitchButton");
+
+const app = $("#app");
+
+const chatList = $("#chatList");
+const messagesContainer = $("#messages");
+const emptyChat = $("#emptyChat");
+
+const composer = $("#composer");
+const messageInput = $("#messageInput");
+
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/*
+    Исправлено:
+    если сервер уже вернул полный URL,
+    API повторно не добавляется.
+*/
+function mediaSrc(url) {
+    if (!url) return "";
+
+    const value = String(url).trim();
+
+    if (!value) return "";
+
+    if (
+        /^https?:\/\//i.test(value) ||
+        value.startsWith("blob:") ||
+        value.startsWith("data:")
+    ) {
+        return value;
+    }
+
+    return API + (
+        value.startsWith("/")
+            ? value
+            : "/" + value
+    );
+}
+
+
+function showToast(message, type = "") {
+
+    const toast = document.createElement("div");
+
+    toast.className = `toast ${type}`;
+
+    toast.textContent = message;
+
+    $("#toastContainer").appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3600);
+}
+
+
+function setAuthError(element, message) {
+
+    if (element) {
+        element.textContent = message || "";
+    }
+}
+
+
+function setToken(value) {
+
+    token = value || "";
+
+    if (token) {
+        localStorage.setItem(
+            "zalupmen_token",
+            token
+        );
+    } else {
+        localStorage.removeItem(
+            "zalupmen_token"
+        );
+    }
+}
+
+
+async function api(endpoint, options = {}) {
+
+    const headers = {
+        ...(options.headers || {})
+    };
+
+    if (
+        options.body &&
+        !(options.body instanceof FormData)
+    ) {
+        headers["Content-Type"] =
+            "application/json";
+    }
+
+    if (token) {
+        headers.Authorization =
+            `Bearer ${token}`;
+    }
+
+    const response = await fetch(
+        API + endpoint,
+        {
+            ...options,
+            headers
+        }
+    );
+
+    let data = {};
+
+    try {
+        data = await response.json();
+    } catch {
+        data = {};
+    }
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.message ||
+            data.error ||
+            "Произошла ошибка"
+        );
+    }
+
+    return data;
+}
+
+
+function formatTime(timestamp) {
+
+    if (!timestamp) return "";
+
+    const number = Number(timestamp);
+
+    const date =
+        new Date(
+            number < 100000000000
+                ? number * 1000
+                : number
+        );
+
+    return date.toLocaleTimeString(
+        "ru-RU",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+}
+
+
+function formatDuration(seconds) {
+
+    seconds = Math.max(
+        0,
+        Math.floor(
+            Number(seconds) || 0
+        )
+    );
+
+    return (
+        String(
+            Math.floor(seconds / 60)
+        ).padStart(2, "0")
+        +
+        ":"
+        +
+        String(seconds % 60).padStart(2, "0")
+    );
+}
+
+
+function getInitials(user) {
+
+    const name =
+        user?.username ||
+        user?.name ||
+        user?.email ||
+        "?";
+
+    return name
+        .trim()
+        .slice(0, 2)
+        .toUpperCase();
+}
+
+
+function avatarHtml(
+    user,
+    className = "avatar"
+) {
+
+    const avatar =
+        user?.avatar ||
+        user?.avatar_url ||
+        user?.avatarUrl ||
+        "";
+
+    if (avatar) {
+
+        return `
+            <div class="${className}">
+                <img
+                    src="${escapeHtml(
+                        mediaSrc(avatar)
+                    )}"
+                    alt=""
+                >
+            </div>
+        `;
+
+    }
+
+    return `
+        <div class="${className}">
+            ${escapeHtml(
+                getInitials(user)
+            )}
+        </div>
+    `;
+}
+
+
+/* =========================
+   AUTH SCREENS
+========================= */
+
+function showLogin() {
+
+    isRegisterMode = false;
+    isForgotMode = false;
+
+    loginForm.classList.remove(
+        "hidden"
+    );
+
+    registerForm.classList.add(
+        "hidden"
+    );
+
+    forgotForm.classList.add(
+        "hidden"
+    );
+
+    authTitle.textContent =
+        "Добро пожаловать";
+
+    authSubtitle.textContent =
+        "Войди в ZalupMen, чтобы продолжить.";
+
+    authSwitchText.textContent =
+        "Нет аккаунта?";
+
+    authSwitchButton.textContent =
+        "Регистрация";
+
+    setAuthError(
+        $("#loginError"),
+        ""
+    );
+}
+
+
+function showRegister() {
+
+    isRegisterMode = true;
+    isForgotMode = false;
+
+    loginForm.classList.add(
+        "hidden"
+    );
+
+    registerForm.classList.remove(
+        "hidden"
+    );
+
+    forgotForm.classList.add(
+        "hidden"
+    );
+
+    authTitle.textContent =
+        "Создать аккаунт";
+
+    authSubtitle.textContent =
+        "Зарегистрируйся и начни общаться.";
+
+    authSwitchText.textContent =
+        "Уже есть аккаунт?";
+
+    authSwitchButton.textContent =
+        "Войти";
+}
+
+
+function showForgot() {
+
+    isRegisterMode = false;
+    isForgotMode = true;
+
+    loginForm.classList.add(
+        "hidden"
+    );
+
+    registerForm.classList.add(
+        "hidden"
+    );
+
+    forgotForm.classList.remove(
+        "hidden"
+    );
+
+    $("#forgotStepEmail")
+        .classList.remove("hidden");
+
+    $("#forgotStepCode")
+        .classList.add("hidden");
+
+    $("#forgotStepPassword")
+        .classList.add("hidden");
+
+    authTitle.textContent =
+        "Восстановление пароля";
+
+    authSubtitle.textContent =
+        "Укажи email, и мы отправим код восстановления.";
+
+    authSwitchText.textContent =
+        "Вспомнил пароль?";
+
+    authSwitchButton.textContent =
+        "Войти";
+}
+
+
+authSwitchButton.addEventListener(
+    "click",
+    () => {
+
+        if (isForgotMode || isRegisterMode) {
+            showLogin();
+        } else {
+            showRegister();
+        }
+
+    }
+);
+
+
+$("#forgotPasswordButton")
+    .addEventListener(
+        "click",
+        showForgot
+    );
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        const errorBox = $("#loginError");
+
+        setAuthError(
+            errorBox,
+            ""
+        );
+
+        const loginInput = $("#loginEmail");
+        const passwordInput = $("#loginPassword");
+
+        const login = loginInput
+            ? loginInput.value.trim()
+            : "";
+
+        const password = passwordInput
+            ? passwordInput.value
+            : "";
+
+        console.log("LOGIN DEBUG:", {
+            login: login,
+            passwordLength: password.length
+        });
+
+        if (!login || !password) {
+            setAuthError(
+                errorBox,
+                "Заполни логин и пароль."
+            );
+
+            console.log(
+                "LOGIN BLOCKED: поле логина или пароля пустое"
+            );
+
+            return;
+        }
+
+        try {
+
+            const result = await api(
+                "/login",
+                {
+                    method: "POST",
+
+                    body: JSON.stringify({
+                        login: login,
+                        password: password
+                    })
+                }
+            );
+
+            console.log(
+                "LOGIN SUCCESS:",
+                result
+            );
+
+            if (!result.token) {
+                throw new Error(
+                    "Сервер не вернул токен авторизации."
+                );
+            }
+
+            token = result.token;
+
+            localStorage.setItem(
+                "zalupmen_token",
+                token
+            );
+
+            currentUser =
+                result.user || null;
+
+            showToast(
+                "Вы успешно вошли.",
+                "success"
+            );
+
+            await checkSession();
+
+        } catch (error) {
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+            setAuthError(
+                errorBox,
+                error.message || "Ошибка входа."
+            );
+        }
+    }
+);
+
+
+/* =========================
+   REGISTER
+========================= */
+
+registerForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        setAuthError(
+            $("#registerError"),
+            ""
+        );
+
+        const username =
+            $("#registerUsername")
+                .value
+                .trim();
+
+        const email =
+            $("#registerEmail")
+                .value
+                .trim();
+
+        const password =
+            $("#registerPassword")
+                .value;
+
+        if (
+            !username ||
+            !email ||
+            !password
+        ) {
+
+            setAuthError(
+                $("#registerError"),
+                "Заполни все поля."
+            );
+
+            return;
+        }
+
+        try {
+
+            const result =
+                await api(
+                    "/register",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            username,
+                            email,
+                            password
+                        })
+                    }
+                );
+
+            if (result.token) {
+
+                setToken(
+                    result.token
+                );
+
+                currentUser =
+                    result.user || null;
+
+                await startApp();
+
+            } else {
+
+                showLogin();
+
+                $("#loginEmail")
+                    .value = email;
+
+                showToast(
+                    "Аккаунт создан. Теперь войди.",
+                    "success"
+                );
+            }
+
+        } catch (error) {
+
+            setAuthError(
+                $("#registerError"),
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   FORGOT PASSWORD
+========================= */
+
+forgotForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        if (
+            !$("#forgotStepEmail")
+                .classList
+                .contains("hidden")
+        ) {
+
+            const email =
+                $("#forgotEmail")
+                    .value
+                    .trim();
+
+            if (!email) {
+
+                setAuthError(
+                    $("#forgotError"),
+                    "Введи email."
+                );
+
+                return;
+            }
+
+            try {
+
+                await api(
+                    "/forgot-password",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            email
+                        })
+                    }
+                );
+
+                $("#forgotStepEmail")
+                    .classList
+                    .add("hidden");
+
+                $("#forgotStepCode")
+                    .classList
+                    .remove("hidden");
+
+                setAuthError(
+                    $("#forgotError"),
+                    ""
+                );
+
+                showToast(
+                    "Код отправлен на почту.",
+                    "success"
+                );
+
+            } catch (error) {
+
+                setAuthError(
+                    $("#forgotError"),
+                    error.message
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================
+   VERIFY CODE
+========================= */
+
+$("#verifyCodeButton")
+    .addEventListener(
+        "click",
+        async () => {
+
+            const email =
+                $("#forgotEmail")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const code =
+                $("#forgotCode")
+                    .value
+                    .trim();
+
+            if (!email) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Введи email."
+                );
+                return;
+            }
+
+            if (!/^\d{6}$/.test(code)) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Введи правильный 6-значный код."
+                );
+                return;
+            }
+
+            try {
+
+                const result =
+                    await api(
+                        "/forgot-password/verify",
+                        {
+                            method: "POST",
+
+                            body: JSON.stringify({
+                                email: email,
+                                code: code
+                            })
+                        }
+                    );
+
+                if (!result.resetToken) {
+                    throw new Error(
+                        "Сервер не выдал токен восстановления."
+                    );
+                }
+
+                // Очень важно:
+                // сохраняем токен, который
+                // вернул сервер
+                resetToken =
+                    result.resetToken;
+
+                // Переходим к созданию нового пароля
+                $("#forgotStepCode")
+                    .classList
+                    .add("hidden");
+
+                $("#forgotStepPassword")
+                    .classList
+                    .remove("hidden");
+
+                setAuthError(
+                    $("#forgotError"),
+                    ""
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "VERIFY CODE ERROR:",
+                    error
+                );
+
+                setAuthError(
+                    $("#forgotError"),
+                    error.message
+                );
+            }
+        }
+    );
+
+
+/* =========================
+   RESET PASSWORD
+========================= */
+
+$("#resetPasswordButton")
+    .addEventListener(
+        "click",
+        async () => {
+
+            const email =
+                $("#forgotEmail")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const password =
+                $("#newPassword")
+                    .value;
+
+            const confirm =
+                $("#newPasswordConfirm")
+                    .value;
+
+            if (!email) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Email не найден."
+                );
+                return;
+            }
+
+            if (!resetToken) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Сначала подтверди код из письма."
+                );
+                return;
+            }
+
+            if (!password) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Введи новый пароль."
+                );
+                return;
+            }
+
+            if (password.length < 6) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Пароль должен содержать минимум 6 символов."
+                );
+                return;
+            }
+
+            if (password !== confirm) {
+                setAuthError(
+                    $("#forgotError"),
+                    "Пароли не совпадают."
+                );
+                return;
+            }
+
+            try {
+
+                const result =
+                    await api(
+                        "/forgot-password/reset",
+                        {
+                            method: "POST",
+
+                            body: JSON.stringify({
+                                email: email,
+                                resetToken: resetToken,
+                                newPassword: password
+                            })
+                        }
+                    );
+
+                console.log(
+                    "PASSWORD RESET:",
+                    result
+                );
+
+                // Старый токен больше не нужен
+                resetToken = "";
+
+                // Очищаем поля восстановления
+                $("#forgotCode").value = "";
+                $("#newPassword").value = "";
+                $("#newPasswordConfirm").value = "";
+
+                // Возвращаемся ко входу
+                showLogin();
+
+                // Вставляем email автоматически
+                $("#loginEmail")
+                    .value = email;
+
+                // Пароль пользователь вводит заново
+                $("#loginPassword")
+                    .value = "";
+
+                setAuthError(
+                    $("#forgotError"),
+                    ""
+                );
+
+                showToast(
+                    "Пароль успешно изменён. Теперь войди с новым паролем.",
+                    "success"
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "RESET PASSWORD ERROR:",
+                    error
+                );
+
+                setAuthError(
+                    $("#forgotError"),
+                    error.message
+                );
+            }
+        }
+    );
+
+
+/* =========================
+   SESSION
+========================= */
+
+async function checkSession() {
+
+    if (!token) {
+
+        showLogin();
+
+        return;
+    }
+
+    try {
+
+        const result =
+            await api("/me");
+
+        currentUser =
+            result.user || result;
+
+        await startApp();
+
+    } catch {
+
+        setToken("");
+
+        currentUser = null;
+
+        showLogin();
+
+    }
+}
+
+
+/* =========================
+   START APP
+========================= */
+
+async function startApp() {
+
+    authScreen.classList.add(
+        "hidden"
+    );
+
+    app.classList.remove(
+        "hidden"
+    );
+
+    updateMyProfile();
+
+    await loadUsers();
+}
+
+
+function updateMyProfile() {
+
+    if (!currentUser) return;
+
+    $("#myName").textContent =
+        currentUser.username ||
+        currentUser.name ||
+        currentUser.email ||
+        "Пользователь";
+
+    const avatar =
+        $("#myAvatar");
+
+    const url =
+        currentUser.avatar ||
+        currentUser.avatar_url ||
+        "";
+
+    if (url) {
+
+        avatar.innerHTML = `
+            <img
+                src="${escapeHtml(
+                    mediaSrc(url)
+                )}"
+                alt=""
+            >
+        `;
+
+    } else {
+
+        avatar.textContent =
+            getInitials(currentUser);
+
+    }
+}
+
+
+/* =========================
+   USERS
+========================= */
+
+async function loadUsers() {
+
+    try {
+
+        const result =
+            await api("/users");
+
+        users =
+            Array.isArray(result)
+                ? result
+                : (
+                    result.users ||
+                    result.data ||
+                    []
+                );
+
+        renderChatList(
+            $("#searchInput")?.value || ""
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Ошибка загрузки пользователей:",
+            error
+        );
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+    }
+}
+
+
+/* =========================
+   CHAT LIST
+========================= */
+
+function renderChatList(search = "") {
+
+    const query =
+        String(search)
+            .trim()
+            .toLowerCase();
+
+    const filtered =
+        users.filter(user => {
+
+            if (
+                currentUser &&
+                Number(user.id) ===
+                Number(currentUser.id)
+            ) {
+                return false;
+            }
+
+            const username =
+                String(
+                    user.username ||
+                    user.name ||
+                    ""
+                ).toLowerCase();
+
+            const email =
+                String(
+                    user.email || ""
+                ).toLowerCase();
+
+            return (
+                !query ||
+                username.includes(query) ||
+                email.includes(query)
+            );
+        });
+
+
+    if (!filtered.length) {
+
+        chatList.innerHTML = `
+            <div
+                style="
+                    padding:25px 15px;
+                    text-align:center;
+                    color:var(--text-muted);
+                    font-size:12px;
+                "
+            >
+                Пользователи не найдены
+            </div>
+        `;
+
+        return;
+    }
+
+
+    chatList.innerHTML =
+        filtered
+            .map(user => {
+
+                const active =
+                    currentChatUser &&
+                    Number(
+                        currentChatUser.id
+                    ) ===
+                    Number(user.id);
+
+                return `
+                    <button
+                        class="chat-item ${active ? "active" : ""}"
+                        data-user-id="${escapeHtml(user.id)}"
+                    >
+
+                        ${avatarHtml(user)}
+
+                        <div class="chat-info">
+
+                            <div class="chat-top">
+
+                                <div class="chat-name">
+                                    ${escapeHtml(
+                                        user.username ||
+                                        user.name ||
+                                        user.email ||
+                                        "Пользователь"
+                                    )}
+                                </div>
+
+                            </div>
+
+                            <div class="chat-preview">
+                                ${
+                                    user.title
+                                        ? escapeHtml(user.title)
+                                        : "Начать общение"
+                                }
+                            </div>
+
+                        </div>
+
+                    </button>
+                `;
+
+            })
+            .join("");
+
+
+    chatList
+        .querySelectorAll(".chat-item")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    openChatById(
+                        Number(
+                            button.dataset.userId
+                        )
+                    );
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================
+   OPEN CHAT
+========================= */
+
+async function openChatById(userId) {
+
+    const user =
+        users.find(
+            item =>
+                Number(item.id) ===
+                Number(userId)
+        );
+
+    if (!user) {
+
+        showToast(
+            "Пользователь не найден.",
+            "error"
+        );
+
+        return;
+    }
+
+    currentChatUser = user;
+
+    renderChatHeader();
+
+    renderChatList(
+        $("#searchInput")?.value || ""
+    );
+
+    emptyChat.classList.add(
+        "hidden"
+    );
+
+    composer.classList.remove(
+        "hidden"
+    );
+
+    await loadMessages();
+}
+
+
+/* =========================
+   CHAT HEADER
+========================= */
+
+function renderChatHeader() {
+
+    if (!currentChatUser) return;
+
+    $("#chatHeaderUser")
+        .classList
+        .remove("hidden");
+
+    $("#chatHeaderActions")
+        .classList
+        .remove("hidden");
+
+
+    const avatar =
+        $("#chatHeaderAvatar");
+
+    const url =
+        currentChatUser.avatar ||
+        currentChatUser.avatar_url ||
+        currentChatUser.avatarUrl ||
+        "";
+
+
+    if (url) {
+
+        avatar.innerHTML = `
+            <img
+                src="${escapeHtml(
+                    mediaSrc(url)
+                )}"
+                alt=""
+            >
+        `;
+
+    } else {
+
+        avatar.textContent =
+            getInitials(
+                currentChatUser
+            );
+
+    }
+
+
+    $("#chatHeaderName")
+        .textContent =
+            currentChatUser.username ||
+            currentChatUser.name ||
+            currentChatUser.email ||
+            "Пользователь";
+
+
+    /*
+        Исправлено:
+        раньше условие всегда показывало
+        "В сети".
+    */
+
+    const online =
+        currentChatUser.online === true ||
+        currentChatUser.is_online === true ||
+        currentChatUser.status === "online" ||
+        currentChatUser.status === "В сети";
+
+
+    $("#chatHeaderStatus")
+        .textContent =
+            online
+                ? "В сети"
+                : "Не в сети";
+}
+
+
+/* =========================
+   LOAD MESSAGES
+========================= */
+
+async function loadMessages() {
+
+    if (!currentChatUser) return;
+
+    try {
+
+        const result =
+            await api(
+                `/messages/${currentChatUser.id}`
+            );
+
+        messages =
+            Array.isArray(result)
+                ? result
+                : (
+                    result.messages ||
+                    result.data ||
+                    []
+                );
+
+        renderMessages();
+
+        await markMessagesRead();
+
+    } catch (error) {
+
+        console.error(
+            "Ошибка загрузки сообщений:",
+            error
+        );
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+    }
+}
+
+
+/* =========================
+   RENDER MESSAGES
+========================= */
+
+function renderMessages() {
+
+    if (!messages.length) {
+
+        messagesContainer.innerHTML = `
+            <div class="empty-chat">
+
+                <div class="empty-chat-icon">
+                    💬
+                </div>
+
+                <div class="empty-chat-title">
+                    Пока нет сообщений
+                </div>
+
+                <div class="empty-chat-text">
+                    Напиши первое сообщение.
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    messagesContainer.innerHTML =
+        messages
+            .map(renderMessage)
+            .join("");
+
+
+    messagesContainer
+        .querySelectorAll(
+            "[data-message-id]"
+        )
+        .forEach(element => {
+
+            element.addEventListener(
+                "contextmenu",
+                event => {
+
+                    event.preventDefault();
+
+                    showMessageMenu(
+                        event,
+                        Number(
+                            element.dataset.messageId
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+
+    setupVoiceMessages();
+
+
+    requestAnimationFrame(() => {
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+
+    });
+}
+
+
+/* =========================
+   RENDER ONE MESSAGE
+========================= */
+
+function renderMessage(message) {
+
+    const senderId =
+        Number(
+            message.sender_id ??
+            message.senderId ??
+            message.user_id
+        );
+
+    const mine =
+        currentUser &&
+        Number(currentUser.id) ===
+        senderId;
+
+    const messageId =
+        Number(message.id);
+
+    const text =
+        message.content ??
+        message.text ??
+        message.message ??
+        "";
+
+    const type =
+        String(
+            message.message_type ||
+            message.type ||
+            ""
+        ).toLowerCase();
+
+    const mime =
+        String(
+            message.mime_type ||
+            message.mimeType ||
+            ""
+        ).toLowerCase();
+
+    const mediaUrl =
+        message.media_url ||
+        message.mediaUrl ||
+        message.file_url ||
+        message.url ||
+        "";
+
+
+    let content = "";
+
+
+    /* TEXT */
+
+    if (
+        !mediaUrl &&
+        (!type || type === "text")
+    ) {
+
+        content = `
+            <div class="message-text">
+                ${escapeHtml(text)}
+            </div>
+        `;
+
+    }
+
+
+    /* IMAGE */
+
+    else if (
+        type === "image" ||
+        mime.startsWith("image/")
+    ) {
+
+        const src =
+            mediaSrc(mediaUrl);
+
+        content = `
+            <div class="message-media">
+
+                <img
+                    src="${escapeHtml(src)}"
+                    alt="Изображение"
+                    style="
+                        display:block;
+                        max-width:100%;
+                        max-height:420px;
+                        border-radius:11px;
+                        object-fit:contain;
+                        cursor:pointer;
+                    "
+                    data-image-url="${escapeHtml(src)}"
+                >
+
+            </div>
+        `;
+
+    }
+
+
+    /* VIDEO */
+
+    else if (
+        type === "video" ||
+        mime.startsWith("video/")
+    ) {
+
+        content = `
+            <video
+                controls
+                preload="metadata"
+                style="
+                    display:block;
+                    width:100%;
+                    max-width:500px;
+                    max-height:420px;
+                    border-radius:11px;
+                    background:#000;
+                "
+                src="${escapeHtml(
+                    mediaSrc(mediaUrl)
+                )}"
+            ></video>
+        `;
+
+    }
+
+
+    /* AUDIO / VOICE */
+
+    else if (
+        type === "audio" ||
+        type === "voice" ||
+        mime.startsWith("audio/")
+    ) {
+
+        content = `
+            <div
+                class="voice-message"
+                data-audio-url="${escapeHtml(
+                    mediaSrc(mediaUrl)
+                )}"
+            >
+
+                <button
+                    class="voice-play"
+                    type="button"
+                >
+                    ▶
+                </button>
+
+                <div class="voice-info">
+
+                    <div class="voice-waveform">
+
+                        ${Array.from(
+                            { length: 28 },
+                            (_, index) => `
+                                <span
+                                    style="
+                                        height:${
+                                            25 +
+                                            (
+                                                (
+                                                    index * 17 +
+                                                    messageId * 13
+                                                ) % 55
+                                            )
+                                        }%;
+                                    "
+                                ></span>
+                            `
+                        ).join("")}
+
+                    </div>
+
+                    <div class="voice-bottom">
+
+                        <span class="voice-current">
+                            0:00
+                        </span>
+
+                        <span class="voice-duration">
+                            0:00
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+    }
+
+
+    /* FILE */
+
+    else if (mediaUrl) {
+
+        const filename =
+            message.file_name ||
+            message.filename ||
+            "Файл";
+
+        content = `
+            <a
+                href="${escapeHtml(
+                    mediaSrc(mediaUrl)
+                )}"
+                target="_blank"
+                rel="noreferrer"
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                    color:inherit;
+                    text-decoration:none;
+                "
+            >
+
+                <span style="font-size:22px">
+                    📄
+                </span>
+
+                <span>
+                    ${escapeHtml(filename)}
+                </span>
+
+            </a>
+        `;
+
+    }
+
+
+    /* FALLBACK */
+
+    else {
+
+        content = `
+            <div class="message-text">
+                ${escapeHtml(text)}
+            </div>
+        `;
+
+    }
+
+
+    const time =
+        formatTime(
+            message.created_at ||
+            message.createdAt ||
+            message.timestamp
+        );
+
+    const read =
+        message.read ||
+        message.is_read ||
+        message.read_at;
+
+
+    return `
+        <div
+            class="message-row ${mine ? "mine" : ""}"
+            data-message-id="${escapeHtml(messageId)}"
+        >
+
+            <div class="message-bubble">
+
+                ${content}
+
+                <div class="message-meta">
+
+                    <span>
+                        ${escapeHtml(time)}
+                    </span>
+
+                    ${
+                        mine
+                            ? `
+                                <span
+                                    title="${
+                                        read
+                                            ? "Прочитано"
+                                            : "Отправлено"
+                                    }"
+                                >
+                                    ${read ? "✓✓" : "✓"}
+                                </span>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+// =========================
+// VOICE MESSAGES
+// =========================
+
+function updateVoiceVisual(voice, percent) {
+    const bars = voice.querySelectorAll(".voice-waveform span");
+
+    if (!bars.length) return;
+
+    const value = Math.max(0, Math.min(100, percent));
+    const activeCount = Math.floor((value / 100) * bars.length);
+
+    bars.forEach((bar, index) => {
+        bar.classList.toggle("played", index < activeCount);
+    });
+}
+
+function stopCurrentAudio() {
+    if (!currentAudio) return;
+
+    const audio = currentAudio;
+    const voice = audio.__voiceElement;
+
+    try {
+        audio.pause();
+        audio.currentTime = 0;
+    } catch {}
+
+    if (voice) {
+        voice.classList.remove("playing");
+
+        const button = voice.querySelector(".voice-play");
+        if (button) {
+            button.textContent = "▶";
+        }
+
+        const current = voice.querySelector(".voice-current");
+        if (current) {
+            current.textContent = "0:00";
+        }
+
+        updateVoiceVisual(voice, 0);
+    }
+
+    currentAudio = null;
+}
+
+function setupVoiceMessages() {
+    document.querySelectorAll(".voice-message").forEach((voice) => {
+        if (voice.dataset.ready === "1") return;
+
+        voice.dataset.ready = "1";
+
+        const url = voice.dataset.audioUrl;
+        const playButton = voice.querySelector(".voice-play");
+        const waveform = voice.querySelector(".voice-waveform");
+        const currentTimeElement = voice.querySelector(".voice-current");
+        const durationElement = voice.querySelector(".voice-duration");
+
+        if (!url || !playButton) return;
+
+        const audio = new Audio(url);
+        audio.preload = "metadata";
+
+        audio.__voiceElement = voice;
+
+        playButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            if (currentAudio && currentAudio !== audio) {
+                stopCurrentAudio();
+            }
+
+            if (audio.paused) {
+                currentAudio = audio;
+
+                audio.play()
+                    .then(() => {
+                        voice.classList.add("playing");
+                        playButton.textContent = "❚❚";
+                    })
+                    .catch((error) => {
+                        console.error("Ошибка воспроизведения:", error);
+                        showToast("Не удалось воспроизвести голосовое.", "error");
+                    });
+            } else {
+                audio.pause();
+            }
+        });
+
+        audio.addEventListener("loadedmetadata", () => {
+            if (durationElement) {
+                durationElement.textContent =
+                    formatDuration(audio.duration);
+            }
+        });
+
+        audio.addEventListener("timeupdate", () => {
+            if (!audio.duration) return;
+
+            const percent =
+                (audio.currentTime / audio.duration) * 100;
+
+            updateVoiceVisual(voice, percent);
+
+            if (currentTimeElement) {
+                currentTimeElement.textContent =
+                    formatDuration(audio.currentTime);
+            }
+        });
+
+        audio.addEventListener("play", () => {
+            if (currentAudio && currentAudio !== audio) {
+                stopCurrentAudio();
+            }
+
+            currentAudio = audio;
+
+            voice.classList.add("playing");
+            playButton.textContent = "❚❚";
+        });
+
+        audio.addEventListener("pause", () => {
+            if (!audio.ended) {
+                voice.classList.remove("playing");
+                playButton.textContent = "▶";
+            }
+        });
+
+        audio.addEventListener("ended", () => {
+            voice.classList.remove("playing");
+            playButton.textContent = "▶";
+
+            if (currentTimeElement) {
+                currentTimeElement.textContent = "0:00";
+            }
+
+            updateVoiceVisual(voice, 0);
+
+            if (currentAudio === audio) {
+                currentAudio = null;
+            }
+        });
+
+        if (waveform) {
+            waveform.addEventListener("click", (event) => {
+                if (!audio.duration) return;
+
+                const rect = waveform.getBoundingClientRect();
+
+                const position =
+                    (event.clientX - rect.left) / rect.width;
+
+                audio.currentTime =
+                    Math.max(
+                        0,
+                        Math.min(1, position)
+                    ) * audio.duration;
+            });
+        }
+    });
+}
+
+
+// =========================
+// SEND VOICE
+// =========================
+
+async function sendVoice(blob, mimeType) {
+    if (!currentChatUser) {
+        throw new Error("Сначала выбери чат.");
+    }
+
+    const extension =
+        mimeType.includes("ogg")
+            ? "ogg"
+            : "webm";
+
+    const file = new File(
+        [blob],
+        `voice-${Date.now()}.${extension}`,
+        {
+            type: mimeType
+        }
+    );
+
+    const formData = new FormData();
+
+    formData.append(
+        "receiver_id",
+        currentChatUser.id
+    );
+
+    formData.append(
+        "file",
+        file
+    );
+
+    await api("/messages/media", {
+        method: "POST",
+        body: formData
+    });
+
+    await loadMessages();
+    await loadUsers();
+}
+
+
+// =========================
+// START RECORDING
+// =========================
+
+async function startVoiceRecording() {
+    if (!currentChatUser) {
+        showToast("Сначала выбери чат.", "error");
+        return;
+    }
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+        showToast(
+            "Ваш браузер не поддерживает запись голоса.",
+            "error"
+        );
+        return;
+    }
+
+    try {
+        mediaStream =
+            await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
+
+        let mimeType = "";
+
+        const supportedTypes = [
+            "audio/webm;codecs=opus",
+            "audio/webm",
+            "audio/ogg;codecs=opus"
+        ];
+
+        for (const type of supportedTypes) {
+            if (
+                MediaRecorder.isTypeSupported &&
+                MediaRecorder.isTypeSupported(type)
+            ) {
+                mimeType = type;
+                break;
+            }
+        }
+
+        const options = mimeType
+            ? { mimeType }
+            : {};
+
+        mediaRecorder =
+            new MediaRecorder(
+                mediaStream,
+                options
+            );
+
+        recordedChunks = [];
+
+        mediaRecorder.addEventListener(
+            "dataavailable",
+            (event) => {
+                if (event.data && event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            }
+        );
+
+        mediaRecorder.addEventListener(
+            "stop",
+            async () => {
+                try {
+                    if (!recordedChunks.length) {
+                        throw new Error(
+                            "Запись получилась пустой."
+                        );
+                    }
+
+                    const finalMime =
+                        mediaRecorder.mimeType ||
+                        mimeType ||
+                        "audio/webm";
+
+                    const blob = new Blob(
+                        recordedChunks,
+                        {
+                            type: finalMime
+                        }
+                    );
+
+                    await sendVoice(
+                        blob,
+                        finalMime
+                    );
+
+                    showToast(
+                        "Голосовое сообщение отправлено."
+                    );
+
+                } catch (error) {
+                    console.error(error);
+
+                    showToast(
+                        error.message ||
+                        "Не удалось отправить голосовое.",
+                        "error"
+                    );
+                } finally {
+                    if (mediaStream) {
+                        mediaStream
+                            .getTracks()
+                            .forEach(
+                                track => track.stop()
+                            );
+                    }
+
+                    mediaStream = null;
+                    mediaRecorder = null;
+                    recordedChunks = [];
+
+                    $("#voiceButton").classList.remove(
+                        "recording"
+                    );
+
+                    $("#voiceButton").textContent = "🎙";
+                }
+            }
+        );
+
+        mediaRecorder.start();
+
+        $("#voiceButton").classList.add(
+            "recording"
+        );
+
+        $("#voiceButton").textContent = "⏹";
+
+        showToast("Запись началась...");
+    } catch (error) {
+        console.error(
+            "Ошибка записи:",
+            error
+        );
+
+        if (mediaStream) {
+            mediaStream
+                .getTracks()
+                .forEach(
+                    track => track.stop()
+                );
+        }
+
+        mediaStream = null;
+        mediaRecorder = null;
+
+        $("#voiceButton").classList.remove(
+            "recording"
+        );
+
+        $("#voiceButton").textContent = "🎙";
+
+        showToast(
+            "Не удалось получить доступ к микрофону.",
+            "error"
+        );
+    }
+}
+
+
+// =========================
+// STOP RECORDING
+// =========================
+
+function stopVoiceRecording() {
+    if (!mediaRecorder) return;
+
+    if (
+        mediaRecorder.state === "recording"
+    ) {
+        mediaRecorder.stop();
+    }
+}
+
+
+// =========================
+// VOICE BUTTON
+// =========================
+
+$("#voiceButton").addEventListener(
+    "click",
+    () => {
+        if (
+            mediaRecorder &&
+            mediaRecorder.state === "recording"
+        ) {
+            stopVoiceRecording();
+        } else {
+            startVoiceRecording();
+        }
+    }
+);
+
+
+// =========================
+// FILE ATTACHMENTS
+// =========================
+
+$("#attachButton").addEventListener(
+    "click",
+    () => {
+        if (!currentChatUser) {
+            showToast(
+                "Сначала выбери чат.",
+                "error"
+            );
+            return;
+        }
+
+        $("#fileInput").click();
+    }
+);
+
+$("#fileInput").addEventListener(
+    "change",
+    async () => {
+        const files =
+            Array.from(
+                $("#fileInput").files || []
+            );
+
+        if (
+            !files.length ||
+            !currentChatUser
+        ) {
+            return;
+        }
+
+        for (const file of files) {
+            try {
+                const formData =
+                    new FormData();
+
+                formData.append(
+                    "receiver_id",
+                    currentChatUser.id
+                );
+
+                formData.append(
+                    "file",
+                    file
+                );
+
+                await api(
+                    "/messages/media",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+
+                showToast(
+                    `${file.name}: ${error.message}`,
+                    "error"
+                );
+            }
+        }
+
+        $("#fileInput").value = "";
+
+        await loadMessages();
+        await loadUsers();
+    }
+);
+
+
+// =========================
+// SEND TEXT MESSAGE
+// =========================
+
+async function sendTextMessage() {
+    if (!currentChatUser) {
+        showToast(
+            "Сначала выбери чат.",
+            "error"
+        );
+        return;
+    }
+
+    const input = $("#messageInput");
+
+    const text =
+        input.value.trim();
+
+    if (!text) return;
+
+    try {
+        $("#sendButton").disabled = true;
+
+        await api(
+            "/messages",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    receiver_id:
+                        currentChatUser.id,
+
+                    content:
+                        text
+                })
+            }
+        );
+
+        input.value = "";
+
+        autoResizeTextarea();
+
+        await loadMessages();
+        await loadUsers();
+
+    } catch (error) {
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Не удалось отправить сообщение.",
+            "error"
+        );
+    } finally {
+        $("#sendButton").disabled = false;
+    }
+}
+
+$("#sendButton").addEventListener(
+    "click",
+    sendTextMessage
+);
+
+
+// =========================
+// TEXTAREA
+// =========================
+
+function autoResizeTextarea() {
+    const input =
+        $("#messageInput");
+
+    input.style.height = "auto";
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            130
+        ) + "px";
+}
+
+$("#messageInput").addEventListener(
+    "input",
+    autoResizeTextarea
+);
+
+$("#messageInput").addEventListener(
+    "keydown",
+    (event) => {
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+            event.preventDefault();
+
+            sendTextMessage();
+        }
+    }
+);
+
+
+// =========================
+// MARK MESSAGES AS READ
+// =========================
+
+async function markMessagesRead() {
+    if (
+        !currentChatUser ||
+        !currentUser
+    ) {
+        return;
+    }
+
+    const unread =
+        messages.filter(
+            (message) => {
+                const senderId =
+                    Number(
+                        message.sender_id ??
+                        message.senderId ??
+                        0
+                    );
+
+                const isMine =
+                    senderId ===
+                    Number(currentUser.id);
+
+                const alreadyRead =
+                    message.read ||
+                    message.is_read ||
+                    message.read_at;
+
+                return (
+                    !isMine &&
+                    !alreadyRead
+                );
+            }
+        );
+
+    for (const message of unread) {
+        try {
+            await api(
+                `/messages/${message.id}/read`,
+                {
+                    method: "POST"
+                }
+            );
+        } catch {
+            // Если backend не поддерживает endpoint,
+            // приложение всё равно продолжит работать.
+        }
+    }
+}
+
+
+// =========================
+// IMAGE VIEWER
+// =========================
+
+function showImageViewer(url) {
+    if (!url) return;
+
+    showModal(
+        "Изображение",
+        `
+            <div style="
+                width:100%;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+            ">
+                <img
+                    src="${escapeHtml(url)}"
+                    style="
+                        width:100%;
+                        max-height:70vh;
+                        object-fit:contain;
+                        border-radius:14px;
+                    "
+                >
+            </div>
+        `
+    );
+}
+
+
+// =========================
+// MESSAGE MENU
+// =========================
+
+function showMessageMenu(
+    event,
+    messageId
+) {
+    event.preventDefault();
+
+    selectedMessageId =
+        Number(messageId);
+
+    const message =
+        messages.find(
+            item =>
+                Number(item.id) ===
+                Number(messageId)
+        );
+
+    if (!message) return;
+
+    const senderId =
+        Number(
+            message.sender_id ??
+            message.senderId ??
+            0
+        );
+
+    const mine =
+        senderId ===
+        Number(currentUser.id);
+
+    showModal(
+        "Сообщение",
+        `
+            <div
+                style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:10px;
+                "
+            >
+
+                <button
+                    class="secondary-btn"
+                    id="deleteMessageSelf"
+                    style="width:100%;"
+                >
+                    🗑 Удалить у себя
+                </button>
+
+                ${
+                    mine
+                        ? `
+                            <button
+                                class="danger-btn"
+                                id="deleteMessageEveryone"
+                                style="width:100%;"
+                            >
+                                ❌ Удалить у всех
+                            </button>
+                        `
+                        : ""
+                }
+
+            </div>
+        `
+    );
+
+    const deleteSelf =
+        $("#deleteMessageSelf");
+
+    if (deleteSelf) {
+        deleteSelf.addEventListener(
+            "click",
+            async () => {
+                await deleteMessage(
+                    selectedMessageId,
+                    false
+                );
+            }
+        );
+    }
+
+    const deleteEveryone =
+        $("#deleteMessageEveryone");
+
+    if (deleteEveryone) {
+        deleteEveryone.addEventListener(
+            "click",
+            async () => {
+                await deleteMessage(
+                    selectedMessageId,
+                    true
+                );
+            }
+        );
+    }
+}
+
+
+// =========================
+// DELETE MESSAGE
+// =========================
+
+async function deleteMessage(
+    messageId,
+    everyone = false
+) {
+    if (!messageId) return;
+
+    try {
+        const endpoint =
+            everyone
+                ? `/messages/${messageId}/everyone`
+                : `/messages/${messageId}`;
+
+        await api(
+            endpoint,
+            {
+                method: "DELETE"
+            }
+        );
+
+        closeModal();
+
+        await loadMessages();
+        await loadUsers();
+
+        showToast(
+            everyone
+                ? "Сообщение удалено у всех."
+                : "Сообщение удалено."
+        );
+
+    } catch (error) {
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Не удалось удалить сообщение.",
+            "error"
+        );
+    }
+}
+
+
+// =========================
+// MODAL
+// =========================
+
+function showModal(
+    title,
+    content
+) {
+    $("#modalTitle").textContent =
+        title;
+
+    $("#modalContent").innerHTML =
+        content;
+
+    $("#modalOverlay")
+        .classList
+        .remove("hidden");
+}
+
+function closeModal() {
+    $("#modalOverlay")
+        .classList
+        .add("hidden");
+
+    $("#modalContent").innerHTML =
+        "";
+
+    selectedMessageId =
+        null;
+}
+
+$("#modalClose").addEventListener(
+    "click",
+    closeModal
+);
+
+$("#modalOverlay").addEventListener(
+    "click",
+    (event) => {
+        if (
+            event.target ===
+            $("#modalOverlay")
+        ) {
+            closeModal();
+        }
+    }
+);
+
+
+// =========================
+// USER PROFILE
+// =========================
+
+function showUserInfo(
+    user,
+    isMe = false
+) {
+    if (!user) return;
+
+    const avatar =
+        mediaSrc(
+            user.avatar ||
+            user.avatar_url ||
+            user.photo
+        );
+
+    const username =
+        user.username ||
+        user.name ||
+        "Пользователь";
+
+    const email =
+        user.email ||
+        "";
+
+    const title =
+        user.title ||
+        user.custom_title ||
+        "";
+
+    showModal(
+        isMe
+            ? "Мой профиль"
+            : "Профиль пользователя",
+
+        `
+            <div
+                style="
+                    display:flex;
+                    flex-direction:column;
+                    align-items:center;
+                    gap:14px;
+                    text-align:center;
+                "
+            >
+
+                ${
+                    avatar
+                        ? `
+                            <img
+                                src="${escapeHtml(avatar)}"
+                                style="
+                                    width:96px;
+                                    height:96px;
+                                    border-radius:50%;
+                                    object-fit:cover;
+                                    border:2px solid var(--border-light);
+                                "
+                            >
+                        `
+                        : `
+                            <div
+                                style="
+                                    width:96px;
+                                    height:96px;
+                                    border-radius:50%;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    background:var(--panel-light);
+                                    font-size:38px;
+                                "
+                            >
+                                👤
+                            </div>
+                        `
+                }
+
+                <div
+                    style="
+                        font-size:22px;
+                        font-weight:700;
+                    "
+                >
+                    ${escapeHtml(username)}
+                </div>
+
+                ${
+                    title
+                        ? `
+                            <div
+                                style="
+                                    color:var(--accent);
+                                    font-weight:600;
+                                "
+                            >
+                                ${escapeHtml(title)}
+                            </div>
+                        `
+                        : ""
+                }
+
+                ${
+                    email
+                        ? `
+                            <div
+                                style="
+                                    color:var(--text-secondary);
+                                "
+                            >
+                                ${escapeHtml(email)}
+                            </div>
+                        `
+                        : ""
+                }
+
+                ${
+                    isMe
+                        ? `
+                            <button
+                                class="danger-btn"
+                                id="logoutButton"
+                                style="
+                                    width:100%;
+                                    margin-top:10px;
+                                "
+                            >
+                                Выйти из аккаунта
+                            </button>
+                        `
+                        : ""
+                }
+
+            </div>
+        `
+    );
+
+    if (isMe) {
+        const logoutButton =
+            $("#logoutButton");
+
+        if (logoutButton) {
+            logoutButton.addEventListener(
+                "click",
+                logout
+            );
+        }
+    }
+}
+
+
+// =========================
+// LOGOUT
+// =========================
+
+async function logout() {
+    try {
+        await api(
+            "/logout",
+            {
+                method: "POST"
+            }
+        );
+    } catch {
+        // Даже если endpoint отсутствует,
+        // локальная сессия будет очищена.
+    }
+
+    setToken("");
+
+    currentUser = null;
+    currentChatUser = null;
+
+    users = [];
+    messages = [];
+
+    closeModal();
+
+    $("#app")
+        .classList
+        .add("hidden");
+
+    $("#authScreen")
+        .classList
+        .remove("hidden");
+
+    showLogin();
+
+    showToast(
+        "Вы вышли из аккаунта."
+    );
+}
+
+
+// =========================
+// PROFILE BUTTON
+// =========================
+
+$("#profileButton").addEventListener(
+    "click",
+    () => {
+        if (!currentUser) return;
+
+        showUserInfo(
+            currentUser,
+            true
+        );
+    }
+);
+
+
+// =========================
+// CHAT PROFILE
+// =========================
+
+$("#chatProfileButton").addEventListener(
+    "click",
+    () => {
+        if (!currentChatUser) return;
+
+        showUserInfo(
+            currentChatUser,
+            false
+        );
+    }
+);
+
+
+// =========================
+// CHAT MORE BUTTON
+// =========================
+
+$("#chatMoreButton").addEventListener(
+    "click",
+    () => {
+        if (!currentChatUser) return;
+
+        showUserInfo(
+            currentChatUser,
+            false
+        );
+    }
+);
+
+
+// =========================
+// NEW CHAT
+// =========================
+
+$("#newChatButton").addEventListener(
+    "click",
+    () => {
+        const input =
+            $("#searchInput");
+
+        input.focus();
+        input.select();
+
+        showToast(
+            "Найди пользователя через поиск."
+        );
+    }
+);
+
+
+// =========================
+// SEARCH
+// =========================
+
+$("#searchInput").addEventListener(
+    "input",
+    () => {
+        renderChatList(
+            $("#searchInput").value
+        );
+    }
+);
+
+
+// =========================
+// EXTRA MESSAGE EVENTS
+// =========================
+
+$("#messages").addEventListener(
+    "contextmenu",
+    (event) => {
+        const row =
+            event.target.closest(
+                ".message-row"
+            );
+
+        if (!row) return;
+
+        const id =
+            row.dataset.messageId;
+
+        if (id) {
+            showMessageMenu(
+                event,
+                id
+            );
+        }
+    }
+);
+
+$("#messages").addEventListener(
+    "click",
+    (event) => {
+        const image =
+            event.target.closest(
+                "[data-image-url]"
+            );
+
+        if (image) {
+            const url =
+                image.dataset.imageUrl;
+
+            if (url) {
+                showImageViewer(url);
+            }
+
+            return;
+        }
+    }
+);
+
+
+// =========================
+// PATCH CHAT LOADING
+// =========================
+
+// После открытия чата помечаем
+// непрочитанные сообщения прочитанными.
+const originalLoadMessages =
+    loadMessages;
+
+loadMessages = async function () {
+    await originalLoadMessages();
+
+    setupVoiceMessages();
+
+    await markMessagesRead();
+};
+
+
+// =========================
+// PERIODIC MESSAGE REFRESH
+// =========================
+
+setInterval(
+    async () => {
+        if (
+            !token ||
+            !currentChatUser ||
+            document.hidden
+        ) {
+            return;
+        }
+
+        try {
+            await loadMessages();
+        } catch (error) {
+            console.error(
+                "Ошибка автообновления сообщений:",
+                error
+            );
+        }
+    },
+    5000
+);
+
+
+// =========================
+// PERIODIC USERS REFRESH
+// =========================
+
+setInterval(
+    async () => {
+        if (
+            !token ||
+            document.hidden
+        ) {
+            return;
+        }
+
+        try {
+            await loadUsers();
+        } catch (error) {
+            console.error(
+                "Ошибка автообновления пользователей:",
+                error
+            );
+        }
+    },
+    15000
+);
+
+
+// =========================
+// INITIALIZATION
+// =========================
+
+autoResizeTextarea();
+
+checkSession();
+
+
+// =========================
+// END OF JAVASCRIPT
+// =========================
+
+</script>
+
+</body>
+</html>

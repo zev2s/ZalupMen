@@ -1,0 +1,9 @@
+.env
+node_modules/
+dist/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+server/uploads/
