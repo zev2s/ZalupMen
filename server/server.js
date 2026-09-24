@@ -1667,6 +1667,100 @@ app.get(
     }
 );
 
+/* =========================================================
+   TYPING STATUS
+========================================================= */
+
+const typingUsers = new Map();
+
+app.post(
+    "/typing",
+    auth,
+    (req, res) => {
+        try {
+            const receiverId =
+                Number(req.body.receiver_id);
+
+            const typing =
+                req.body.typing === true;
+
+            if (!receiverId) {
+                return res.status(400).json({
+                    error:
+                        "Не указан получатель"
+                });
+            }
+
+            const key =
+                `${req.user.id}:${receiverId}`;
+
+            if (typing) {
+                typingUsers.set(
+                    key,
+                    Date.now()
+                );
+            } else {
+                typingUsers.delete(key);
+            }
+
+            res.json({
+                success: true
+            });
+
+        } catch (error) {
+            console.error(
+                "TYPING ERROR:",
+                error
+            );
+
+            res.status(500).json({
+                error:
+                    "Не удалось обновить статус"
+            });
+        }
+    }
+);
+
+
+app.get(
+    "/typing/:userId",
+    auth,
+    (req, res) => {
+        try {
+            const otherUserId =
+                Number(req.params.userId);
+
+            const key =
+                `${otherUserId}:${req.user.id}`;
+
+            const lastTyping =
+                typingUsers.get(key) || 0;
+
+            const isTyping =
+                Date.now() - lastTyping < 3000;
+
+            if (!isTyping) {
+                typingUsers.delete(key);
+            }
+
+            res.json({
+                success: true,
+                typing: isTyping
+            });
+
+        } catch (error) {
+            console.error(
+                "GET TYPING ERROR:",
+                error
+            );
+
+            res.status(500).json({
+                error:
+                    "Не удалось получить статус"
+            });
+        }
+    }
+);
 
 /* =========================================================
    SEND TEXT
