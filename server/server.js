@@ -2995,34 +2995,6 @@ app.use(
 );
 
 /* =========================================================
-   TEMPORARY DELETE ALL USERS
-========================================================= */
-
-app.get("/delete-all-users-9x7k2", (req, res) => {
-    try {
-        db.prepare("DELETE FROM messages").run();
-        db.prepare("DELETE FROM blocks").run();
-        db.prepare("DELETE FROM password_resets").run();
-        db.prepare("DELETE FROM users").run();
-
-        res.json({
-            success: true,
-            message: "Все аккаунты удалены"
-        });
-
-    } catch (error) {
-        console.error(
-            "DELETE ALL USERS ERROR:",
-            error
-        );
-
-        res.status(500).json({
-            error: "Ошибка удаления аккаунтов"
-        });
-    }
-});
-
-/* =========================================================
    START
 ========================================================= */
 
