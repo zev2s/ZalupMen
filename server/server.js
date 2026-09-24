@@ -1018,6 +1018,18 @@ app.post("/login", (req, res) => {
             loginLower
         );
 
+        console.log("LOGIN USER CHECK:", {
+            login,
+            found: !!user,
+            userId: user ? user.id : null,
+            username: user ? user.username : null,
+            email: user ? user.email : null,
+            hasPasswordHash: !!(user && user.password_hash),
+            passwordHashLength: user && user.password_hash
+                ? user.password_hash.length
+                : 0
+        });
+
         if (!user) {
             return res.status(401).json({
                 error:
