@@ -4406,7 +4406,17 @@ $("#messageInput").addEventListener(
 
         autoResizeTextarea();
 
-        if (!currentChatUser) return;
+        if (!currentChatUser) {
+            console.log(
+                "TYPING: нет currentChatUser"
+            );
+            return;
+        }
+
+        console.log(
+            "TYPING: отправляю статус",
+            currentChatUser.id
+        );
 
         api(
             "/typing",
@@ -4419,12 +4429,30 @@ $("#messageInput").addEventListener(
                     typing: true
                 })
             }
-        ).catch(() => {});
+        )
+        .then(result => {
+            console.log(
+                "TYPING: сервер ответил",
+                result
+            );
+        })
+        .catch(error => {
+            console.error(
+                "TYPING ERROR:",
+                error
+            );
+        });
+
 
         clearTimeout(typingTimer);
 
+
         typingTimer =
             setTimeout(() => {
+
+                console.log(
+                    "TYPING: прекращаю статус"
+                );
 
                 api(
                     "/typing",
@@ -4437,7 +4465,19 @@ $("#messageInput").addEventListener(
                             typing: false
                         })
                     }
-                ).catch(() => {});
+                )
+                .then(result => {
+                    console.log(
+                        "TYPING OFF:",
+                        result
+                    );
+                })
+                .catch(error => {
+                    console.error(
+                        "TYPING OFF ERROR:",
+                        error
+                    );
+                });
 
             }, 2000);
     }
