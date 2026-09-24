@@ -848,9 +848,10 @@ textarea {
 .message-bubble {
     position: relative;
 
-    max-width: min(620px,72%);
+    width: fit-content;
+    max-width: min(620px, 72%);
 
-    padding: 9px 12px;
+    padding: 7px 10px;
 
     border: 1px solid var(--border);
 
@@ -865,6 +866,8 @@ textarea {
 
     box-shadow:
         0 5px 20px rgba(0,0,0,.08);
+
+    overflow-wrap: anywhere;
 }
 
 .message-row.mine .message-bubble {
@@ -899,6 +902,23 @@ textarea {
 
 .message-row.mine .message-meta {
     color: rgba(255,255,255,.45);
+}
+
+.message-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: rgba(255,255,255,.45);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    transition: color .2s ease;
+}
+
+.message-check.read {
+    color: #8b5cf6;
 }
 
 /* =========================
@@ -1865,12 +1885,12 @@ textarea {
                         Пользователь
                     </h2>
 
-                    <div
-                        id="chatHeaderStatus"
-                        class="chat-header-status"
-                    >
-                        Не в сети
-                    </div>
+                   <div
+    id="chatHeaderStatus"
+    class="chat-header-status"
+>
+    Не в сети
+</div>
 
                 </div>
 
@@ -2225,15 +2245,17 @@ function formatTime(timestamp) {
                 : number
         );
 
-    return date.toLocaleTimeString(
+    return date.toLocaleString(
         "ru-RU",
         {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
             hour: "2-digit",
             minute: "2-digit"
         }
     );
 }
-
 
 function formatDuration(seconds) {
 
@@ -3301,12 +3323,6 @@ function renderChatHeader() {
             "Пользователь";
 
 
-    /*
-        Исправлено:
-        раньше условие всегда показывало
-        "В сети".
-    */
-
     const online =
         currentChatUser.online === true ||
         currentChatUser.is_online === true ||
@@ -3320,7 +3336,6 @@ function renderChatHeader() {
                 ? "В сети"
                 : "Не в сети";
 }
-
 
 /* =========================
    LOAD MESSAGES
@@ -3365,7 +3380,85 @@ async function loadMessages() {
     }
 }
 
+// =========================
+// TYPING INDICATOR
+// =========================
 
+let typingCheckTimer = null;
+
+
+async function checkTypingStatus() {
+
+    if (!currentChatUser) return;
+
+    try {
+
+        const result =
+            await api(
+                `/typing/${currentChatUser.id}`
+            );
+
+        const isTyping =
+            result.typing === true;
+
+        const status =
+            $("#chatHeaderStatus");
+
+        if (!status) return;
+
+
+        if (isTyping) {
+
+            status.textContent =
+                "печатает…";
+
+            status.style.color =
+                "#8b5cf6";
+
+        } else {
+
+            const online =
+                currentChatUser.online === true ||
+                currentChatUser.is_online === true ||
+                currentChatUser.status === "online" ||
+                currentChatUser.status === "В сети";
+
+            status.textContent =
+                online
+                    ? "В сети"
+                    : "Не в сети";
+
+            status.style.color = "";
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ошибка проверки typing:",
+            error
+        );
+
+    }
+}
+
+
+function startTypingChecker() {
+
+    if (typingCheckTimer) {
+        clearInterval(
+            typingCheckTimer
+        );
+    }
+
+    typingCheckTimer =
+        setInterval(
+            checkTypingStatus,
+            1000
+        );
+}
+
+
+startTypingChecker();
 /* =========================
    RENDER MESSAGES
 ========================= */
@@ -3454,8 +3547,7 @@ function renderMessage(message) {
 
     const mine =
         currentUser &&
-        Number(currentUser.id) ===
-        senderId;
+        Number(currentUser.id) === senderId;
 
     const messageId =
         Number(message.id);
@@ -3487,9 +3579,7 @@ function renderMessage(message) {
         message.url ||
         "";
 
-
     let content = "";
-
 
     /* TEXT */
 
@@ -3505,7 +3595,6 @@ function renderMessage(message) {
         `;
 
     }
-
 
     /* IMAGE */
 
@@ -3539,7 +3628,6 @@ function renderMessage(message) {
 
     }
 
-
     /* VIDEO */
 
     else if (
@@ -3566,7 +3654,6 @@ function renderMessage(message) {
         `;
 
     }
-
 
     /* AUDIO / VOICE */
 
@@ -3635,7 +3722,6 @@ function renderMessage(message) {
 
     }
 
-
     /* FILE */
 
     else if (mediaUrl) {
@@ -3674,7 +3760,6 @@ function renderMessage(message) {
 
     }
 
-
     /* FALLBACK */
 
     else {
@@ -3687,19 +3772,20 @@ function renderMessage(message) {
 
     }
 
+    const createdAt =
+        message.created_at ||
+        message.createdAt ||
+        message.timestamp;
 
     const time =
-        formatTime(
-            message.created_at ||
-            message.createdAt ||
-            message.timestamp
-        );
+        formatTime(createdAt);
 
     const read =
-        message.read ||
-        message.is_read ||
-        message.read_at;
-
+        message.read === true ||
+        message.read === 1 ||
+        message.is_read === true ||
+        message.is_read === 1 ||
+        !!message.read_at;
 
     return `
         <div
@@ -3713,7 +3799,7 @@ function renderMessage(message) {
 
                 <div class="message-meta">
 
-                    <span>
+                    <span class="message-time">
                         ${escapeHtml(time)}
                     </span>
 
@@ -3721,6 +3807,11 @@ function renderMessage(message) {
                         mine
                             ? `
                                 <span
+                                    class="message-check ${
+                                        read
+                                            ? "read"
+                                            : ""
+                                    }"
                                     title="${
                                         read
                                             ? "Прочитано"
@@ -3740,6 +3831,7 @@ function renderMessage(message) {
         </div>
     `;
 }
+
 // =========================
 // VOICE MESSAGES
 // =========================
@@ -4304,6 +4396,51 @@ function autoResizeTextarea() {
 $("#messageInput").addEventListener(
     "input",
     autoResizeTextarea
+);
+
+let typingTimer = null;
+
+$("#messageInput").addEventListener(
+    "input",
+    () => {
+
+        autoResizeTextarea();
+
+        if (!currentChatUser) return;
+
+        api(
+            "/typing",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    receiver_id:
+                        currentChatUser.id,
+
+                    typing: true
+                })
+            }
+        ).catch(() => {});
+
+        clearTimeout(typingTimer);
+
+        typingTimer =
+            setTimeout(() => {
+
+                api(
+                    "/typing",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            receiver_id:
+                                currentChatUser.id,
+
+                            typing: false
+                        })
+                    }
+                ).catch(() => {});
+
+            }, 2000);
+    }
 );
 
 $("#messageInput").addEventListener(
